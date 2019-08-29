@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block body %}
+<section class="content-header">
+    <h1>
+        品牌
+        <small>列表</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">品牌列表</li>
+    </ol>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid" style="margin-bottom: 10px">
+        <div class="span12">
+            <div class="btn-toolbar">
+                <!--            <div class="pull-right">-->
+                <!--                <div class="input-append">-->
+                <!--                    <input type="text" placeholder="模糊查询" id="fuzzy-search">-->
+                <!--                    <div class="btn-group">-->
+                <!--                        <button type="button" class="btn" id="btn-simple-search"><i class="fa fa-search"></i></button>-->
+                <!--                        <button type="button" class="btn" title="高级查询" id="toggle-advanced-search">-->
+                <!--                            <i class="fa fa-angle-double-down"></i>-->
+                <!--                        </button>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--            </div>-->
+                <button type="button" class="btn btn-danger" id="btn-del-task"><i class="fa fa-remove"></i> 批量删除
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="span12" id="div-table-container">
+        <table id="brand_list_table" class="table table-bordered no-footer dataTable">
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" name="cb-check-all">
+                </th>
+                <th>名字</th>
+                <th>已入库产品</th>
+                <th>未入库产品</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</section>
+<!-- jQuery 3 -->
+<script src="{% static 'asset/js/jquery.min.js' %}"></script>
+<!-- DataTables -->
+<script src="{% static 'asset/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'asset/js/dataTables.bootstrap.min.js' %}"></script>
+<!-- SlimScroll -->
+<script src="{% static 'asset/js/jquery.slimscroll.min.js' %}"></script>
+<!-- FastClick -->
+<script src="{% static 'asset/js/fastclick.js' %}"></script>
+<script src="{% static 'js/constants.js' %}"></script>
+<script src="{% static 'js/brandlist.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{
+  "name": "sparrow_crawler",
+  "version": "1.0.0",
+  "description": "麻雀爬虫平台",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanguangbaihuo/sparrow_crawler.git"
+  },
+  "keywords": [
+    "bootstrap",
+    "selenium",
+    "django",
+    "sparrow",
+    "scrapy",
+    "web-extension"
+  ],
+  "author": "tina.wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hanguangbaihuo/sparrow_crawler/issues"
+  },
+  "homepage": "https://github.com/hanguangbaihuo/sparrow_crawler#readme",
+  "devDependencies": {
+
+  }
+}
