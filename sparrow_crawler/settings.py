@@ -119,7 +119,7 @@ config = {
         'dev': os.environ.get('CELERY_BROKER_URL',
                               "redis://redis:6379/0"),
         'test': os.environ.get('CELERY_BROKER_URL',
-                               "redis://:dek7^jdUk4@test-redia.redis.rds.aliyuncs.com:6379/0"),
+                               "redis://:slejUEINF3498@test-redia.redis.rds.aliyuncs.com:6379/0"),
         'unit': os.environ.get('CELERY_BROKER_URL',
                                "redis://redis:6379/0"),
     },
@@ -200,7 +200,7 @@ CELERY_ENABLE_UTC = True
 # 允许的格式
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'yaml']
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  # redis作为中间件
+CELERY_BROKER_URL = config['CELERY_BROKER_URL'][RUN_ENV]  # redis作为中间件
 CELERY_BROKER_TRANSPORT = 'redis'
 CELERY_RESULT_BACKEND = 'django-db'  # 使用database作为结果存储
 
