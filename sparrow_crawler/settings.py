@@ -136,7 +136,7 @@ DATABASES = {
     'default': {
         # DATABASE_ENGINE, 测试使用
         'ENGINE': "django.db.backends." + os.environ.get('DATABASE_ENGINE', 'mysql'),
-        'NAME': os.environ.get('DATABASE_NAME', "sparrow_permission_test"),
+        'NAME': os.environ.get('DATABASE_NAME', "sparrow_test"),
         'USER': os.environ.get('DATABASE_USER', "hg_test"),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', "jft87JheHe23"),
         'HOST': os.environ.get('DATABASE_HOST', "rm-2zet7b5nul2095i22wo.mysql.rds.aliyuncs.com"),
