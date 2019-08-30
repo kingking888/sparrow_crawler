@@ -10,4 +10,4 @@ celery broker| redis|
 celery result| mysql|
 |------------|------|
 ### 启动worker
-celery -A sparrow_crawler  worker -l info
+celery -A sparrow_crawler worker -l info
