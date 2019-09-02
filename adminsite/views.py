@@ -2,6 +2,7 @@ import os
 import time
 import traceback
 
+from django.db.models import Q
 from django.http import StreamingHttpResponse, JsonResponse, HttpResponse
 from django.shortcuts import render
 
@@ -80,10 +81,19 @@ class SCProductView(APIView, LimitOffsetPagination):
         """
         浏览产品列表
         """
-        brand_id = request.GET.get('product')
-        print(brand_id)
-        if brand_id is None:
+        filters=[]
+        brand_id = request.GET.get('brand_id')
+        if brand_id:
+            filters.append(Q(brand_id=brand_id))
+        name_like=request.GET.get('query')
+        if name_like:
+            filters.append(Q(title__icontains=name_like)|Q(subtitle__icontains=name_like))
+
+        if len(filters)==0:
             products = CrawlProduct.objects.all()
+        else:
+            products = CrawlProduct.objects.filter(*filters)
+
         results = self.paginate_queryset(products, request, view=self)
         serializer = CrawlProductSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)

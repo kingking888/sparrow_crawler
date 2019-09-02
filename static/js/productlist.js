@@ -1,6 +1,7 @@
 $(function () {
     var $wrapper = $('#div-table-container');
     var $table = $('#product_list_table');
+    var brand_id = $('#hidden_brand_id').val()
 
     var _table = $table.dataTable($.extend(true, {}, CONSTANT.DATA_TABLES.DEFAULT_OPTION, {
         ajax: function (data, callback, settings) {//ajax配置为function,手动调用异步查询
@@ -67,7 +68,7 @@ $(function () {
                 data: "url",
                 width: "30px",
                 render: function (data, type, row, meta) {
-                    return '<a href="http://www.baidu.com" target="_blank"><i class="fa fa-paperclip"></i></a>';
+                    return '<a href="{{ data }}" target="_blank"><i class="fa fa-paperclip"></i></a>';
                 }
             },
             {
@@ -86,7 +87,6 @@ $(function () {
             var $btnView = $('<button type="button" class="btn btn-small btn-primary btn-edit">详情</button>');
             var $btnDel = $('<button type="button" class="btn btn-small btn-danger btn-del">删除</button>');
             $('td', row).eq(5).append($btnView).append($btnDel);
-
         },
         "drawCallback": function (settings) {
             //渲染完毕后的回调
@@ -111,7 +111,7 @@ $(function () {
         showRemove: true,
         uploadUrl: '/api/sparrow_crawl/site/o/import/productlist/',
         initialPreviewConfig: [],
-         fileActionSettings: {                               // 在预览窗口中为新选择的文件缩略图设置文件操作的对象配置
+        fileActionSettings: {                               // 在预览窗口中为新选择的文件缩略图设置文件操作的对象配置
             showRemove: true,                                   // 显示删除按钮
             showUpload: true,                                   // 显示上传按钮
             showDownload: false,                            // 显示下载按钮
@@ -123,10 +123,10 @@ $(function () {
         },
         uploadExtraData:
             function () {  // uploadExtraData携带附加参数，上传时携带brand_id
-            return {
-                brand_id: $('#brand_id_input').val()
+                return {
+                    brand_id: $('#brand_id_input').val()
+                }
             }
-        }
     });
 
 
@@ -143,14 +143,12 @@ $(function () {
 //         userManage.deleteItem(arrItemId);
 //     });
 //
-//     $("#btn-simple-search").click(function(){
-//         userManage.fuzzySearch = true;
-//
-//         //reload效果与draw(true)或者draw()类似,draw(false)则可在获取新数据的同时停留在当前页码,可自行试验
-// //      _table.ajax.reload();
-// //      _table.draw(false);
-//         _table.draw();
-//     });
+    $("#btn-simple-search").click(function () {
+        //reload效果与draw(true)或者draw()类似,draw(false)则可在获取新数据的同时停留在当前页码,可自行试验
+//      _table.ajax.reload();
+//      _table.draw(false);
+        _table.draw();
+    });
 //
 //     $("#btn-advanced-search").click(function(){
 //         userManage.fuzzySearch = false;
@@ -199,10 +197,63 @@ $(function () {
 //         userManage.deleteItem([item]);
 //     });
 //
-//     $("#toggle-advanced-search").click(function(){
-//         $("i",this).toggleClass("fa-angle-double-down fa-angle-double-up");
-//         $("#div-advanced-search").slideToggle("fast");
-//     });
+    $("#toggle-advanced-search").click(function () {
+        $("i", this).toggleClass("fa-angle-double-down fa-angle-double-up");
+        $("#div-advanced-search").slideToggle("fast");
+    });
+
+    $.ajax({
+            url: 'https://backend5.hanguangbaihuo.com/api/sparrow_admin/brands_for_filter/?page_size=10000',
+            type: "GET",
+            success: function (resp) {
+                let array = new Array();
+                if (resp.results) {
+                    for (var i = 0; i < resp.results.length; i++) {
+                        var brand = resp.results[i];
+                        one = {id: brand.id, text: brand.name};
+                        array.push(one);
+                    }
+                }
+                let _brand_select = $('.select2').select2({
+                    data: array
+                });
+                _brand_select.val(brand_id).trigger("change")
+            }
+        }
+    );
+
+    $('#select-brand').on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(data);
+        brand_id = data.id;
+        $('#hidden_brand_id').val(data.id)
+        _table.draw()
+    });
+    // $('.select2').select2({
+    //         ajax: {
+    //             url: 'https://backend5.hanguangbaihuo.com/api/sparrow_admin/brands_for_filter/?page_size=10000',
+    //             dataType: 'json',
+    //             processResults: function (resp) {
+    //                 var array = new Array();
+    //                 if (resp.results) {
+    //                     for (var i = 0; i < resp.results.length; i++) {
+    //                         var brand = resp.results[i];
+    //                         one = {id: brand.id, text: brand.name};
+    //                         if (brand.id == brand_id) {
+    //                             one['selected'] = "selected";
+    //                             console.log(one)
+    //                         } else one['selected'] = false;
+    //                         array.push(one);
+    //                     }
+    //                 }
+    //                 var ret = new Object();
+    //                 ret.results = array;
+    //                 return ret;
+    //             },
+    //             cache: true
+    //         }
+    //     }
+    // );
 //
 //     $("#btn-info-content-collapse").click(function(){
 //         $("i",this).toggleClass("fa-minus fa-plus");
@@ -240,6 +291,23 @@ var productManage = {
         param.start = data.start;
         param.length = data.length;
 
+        //组装brand_id
+        let brand_id = $('#hidden_brand_id').val()
+        //console.log(brand_id)
+        if (brand_id && brand_id!='None') {
+            brand_id = brand_id.trim()
+            if (brand_id.length > 0) {
+                param.brand_id = brand_id;
+            }
+        }
+        //组装简单模糊查询
+        let fuzzy = $("#fuzzy-search").val()
+        if (fuzzy) {
+            console.log(fuzzy)
+            fuzzy = fuzzy.trim()
+            if (fuzzy.length > 0)
+                param.query = fuzzy;
+        }
         return param;
     }
 };
